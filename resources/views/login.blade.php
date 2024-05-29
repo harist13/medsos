@@ -1,3 +1,10 @@
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+
 <form action="{{ route('login.submit') }}" method="POST">
     @csrf
     <div class="form-group">
