@@ -92,26 +92,32 @@
                 <img src="{{ Auth::user()->photo ? asset('storage/profile/' . Auth::user()->photo) : asset('path/to/default/profile-image.png') }}" alt="User Avatar" class="rounded-circle" width="80" height="80">
                 <h4 class="username mt-2">{{ $user->username }}</h4>
                 <p class="fullname">{{ $user->nama }}</p>
-                <p class="bio">Peserta MSIB</p>
+                <p class="bio">{{ $user->bio }}</p>
                 <div class="stats d-flex justify-content-center">
                     <div class="stat mr-4">
                         <strong>{{ $user->posts->count() }}</strong> Posts
                     </div>
                     <div class="stat mr-4">
-                        <strong>0</strong> Followers
+                        <strong><a href="{{ route('user.followers', $user) }}">{{ $user->followers_count }}</a></strong> Followers
                     </div>
                     <div class="stat">
-                        <strong>1</strong> Following
+                        <strong><a href="{{ route('user.following', $user) }}">{{ $user->following_count }}</a></strong> Following
                     </div>
                 </div>
             </div>
             <div class="posts mt-4">
-
-             <a href="{{ route('user.edit.profile')}}" id="editProfileBtn"><i class="fa fa-cog" aria-hidden="true"></i></a>
+                <a href="{{ route('user.edit.profile') }}" id="editProfileBtn"><i class="fa fa-cog" aria-hidden="true"></i></a>
+                
+                @forelse ($posts as $post)
+                    <div class="post text-center">
+                        <img src="{{ asset($post->image_path) }}" alt="Post Image" class="img-fluid" style="max-height: 300px;">
+                      
+                    </div>
+                @empty
                     <div class="post text-center">
                         <p>Belum ada postingan yang dapat ditampilkan</p>
                     </div>
-             
+                @endforelse
             </div>
         </div>
     </div>

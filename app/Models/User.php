@@ -64,4 +64,27 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')->withPivot('status');
     }
+
+    // app/Models/User.php
+
+public function followers()
+{
+    return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id');
+}
+
+public function following()
+{
+    return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id');
+}
+
+  public function getFollowersCountAttribute()
+    {
+        return $this->followers()->count();
+    }
+
+    public function getFollowingCountAttribute()
+    {
+        return $this->following()->count();
+    }
+
 }

@@ -4,13 +4,11 @@
 @section('content')
  
 <main class="col-md-8">
-     <div class="post-menu">
-    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">For You</a>
-    <a href="{{ route('following') }}" class="{{ request()->routeIs('following') ? 'active' : '' }}">Following</a>
-</div>
-
+    <div class="post-menu">
+        <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">For You</a>
+        <a href="{{ route('following') }}" class="{{ request()->routeIs('following') ? 'active' : '' }}">Following</a>
+    </div>
     @foreach ($posts as $post)
-    
         <div class="post" data-post-id="{{ $post->id }}">
             <div class="d-flex justify-content-between">
                 <div>
@@ -49,33 +47,7 @@
                   
                     
                 </div>
-<div class="who-to-follow">
-    <h5>Siapa yang harus diikuti</h5>
-    @foreach ($users as $user)
-        <div class="user">
-            <img src="{{ $user->photo ? asset('storage/profile/' . $user->photo) : asset('path/to/default/profile-image.png') }}" alt="User Avatar">
-            <div>
-                <strong>{{ $user->username }}</strong>
-                <p>{{ $user->nama }}</p>
-            </div>
-             @auth
-            @if (Auth::user()->following->contains($user->id))
-                <form action="{{ route('user.unfollow', $user) }}" method="POST">
-                    @csrf
-                    <button class="btn btn-primary btn-sm">Unfollow</button>
-                </form>
-            @else
-                <form action="{{ route('user.follow', $user) }}" method="POST">
-                    @csrf
-                    <button class="btn btn-primary btn-sm">Follow</button>
-                </form>
-            @endif
-        @else
-            <a href="{{ route('login') }}" class="btn btn-primary btn-sm">Follow</a>
-        @endauth
-    </div>
-@endforeach
-</div>
+
 
 
 <script>

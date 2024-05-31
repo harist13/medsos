@@ -78,11 +78,13 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
-    public function profile()
+  public function profile()
 {
     $user = Auth::user();
-    return view('user.profile', compact('user'));
+    $posts = $user->posts()->latest()->get(); // Mengambil postingan terbaru dari pengguna
+    return view('user.profile', compact('user', 'posts'));
 }
+
 
 public function editProfileForm()
 {
@@ -166,9 +168,11 @@ public function updateProfile(Request $request)
     }
   public function home1()
 {
-    $posts = Post::latest()->get(); // Fetch all posts
-    return view('home', compact('posts'));
+    $posts = Post::latest()->get();
+    $users = User::where('id', '!=', Auth::id())->get(); // Fetch all users except the logged-in user
+    return view('home', compact('posts', 'users'));
 }
+
  public function like(Post $post)
     {
         $user = Auth::user();
@@ -227,4 +231,56 @@ public function showBookmarks()
 
     return view('User.bookmark', compact('bookmarks'));
 }
+
+ public function follow(User $user)
+    {
+        $authUser = Auth::user();
+
+        if (!$authUser->following()->where('friend_id', $user->id)->exists()) {
+            $authUser->following()->attach($user->id);
+        }
+
+        return redirect()->back()->with('success', 'Followed ' . $user->username);
+    }
+
+    public function unfollow(User $user)
+    {
+        $authUser = Auth::user();
+
+        if ($authUser->following()->where('friend_id', $user->id)->exists()) {
+            $authUser->following()->detach($user->id);
+        }
+
+        return redirect()->back()->with('success', 'Unfollowed ' . $user->username);
+    }
+
+    public function followingPosts()
+{
+    $user = Auth::user();
+
+    // Get the list of users the current user is following
+    $followingIds = $user->following()->pluck('friend_id');
+
+    // Get posts from users the current user is following
+    $posts = Post::whereIn('user_id', $followingIds)->latest()->get();
+
+    return view('following', compact('posts'));
+}
+
+// app/Http/Controllers/UserController.php
+
+public function followers(User $user)
+{
+    $followers = $user->followers()->get();
+    return view('user.followfollowing', compact('followers'))->with('type', 'followers');
+}
+
+public function following(User $user)
+{
+    $following = $user->following()->get();
+    return view('user.followfollowing', compact('following'))->with('type', 'following');
+}
+
+
+
 }

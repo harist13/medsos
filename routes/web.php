@@ -28,6 +28,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
      Route::get('/edit-profile', [UserController::class, 'editProfileForm'])->name('user.edit.profile');
     Route::post('/edit-profile', [UserController::class, 'updateProfile'])->name('user.update.profile');
     Route::post('/confirm-password', [UserController::class, 'confirmPassword'])->name('user.confirm.password');
+    Route::post('/user/{user}/follow', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/user/{user}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
+    Route::get('/following', [UserController::class, 'followingPosts'])->name('following');
+     Route::get('/user/{user}/followers', [UserController::class, 'followers'])->name('user.followers');
+    Route::get('/user/{user}/following', [UserController::class, 'following'])->name('user.following');
 
 });
 
